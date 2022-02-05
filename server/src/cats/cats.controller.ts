@@ -14,6 +14,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ReadOnlyCatDto } from './dto/cat.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -29,6 +31,20 @@ export class CatsController {
     return 'get one cat api';
   }
 
+  @ApiOperation({ summary: '회원가입' }) // Swagger 문서 title
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @ApiResponse({
+    status: 400,
+    description: '중복된 이메일이 존재하는 경우',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '회원가입 성공',
+    type: ReadOnlyCatDto,
+  })
   @Post()
   async signUp(@Body() body: CatRequestDto) {
     return await this.catsService.signUp(body);
