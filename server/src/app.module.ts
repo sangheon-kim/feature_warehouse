@@ -4,6 +4,7 @@ import { AppService } from 'src/app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
+import * as mongoose from 'mongoose';
 
 @Module({
   imports: [
@@ -21,5 +22,6 @@ import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    mongoose.set('debug', process.env.NODE_ENV === 'development');
   }
 }
