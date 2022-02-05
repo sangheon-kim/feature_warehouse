@@ -16,11 +16,16 @@ import {
 import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dto/cat.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly authService: AuthService,
+  ) {}
   @Get()
   getAllCat() {
     return 'get all cat api';
@@ -51,7 +56,8 @@ export class CatsController {
   }
 
   @Post('/login')
-  async login() {
-    return 'login';
+  async login(@Body() body: LoginRequestDto) {
+    return this.authService.jwtLogIn(body);
+    // return 'login';
   }
 }

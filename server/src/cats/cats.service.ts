@@ -2,6 +2,7 @@ import { CatRequestDto } from './dto/cats.request.dto';
 import { HttpException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CatsRepository } from './cats.repository';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class CatsService {
