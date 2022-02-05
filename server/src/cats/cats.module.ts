@@ -9,6 +9,6 @@ import { CatsRepository } from './cats.repository';
   imports: [MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }])], // CatModel 을 사용하기 위해 모듈에 import
   controllers: [CatsController],
   providers: [CatsService, CatsRepository],
-  exports: [CatsService],
+  exports: [CatsService, CatsRepository],
 })
 export class CatsModule {}

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 import { CatsModule } from './cats/cats.module';
+import { AuthModule } from './auth/auth.module';
 import * as mongoose from 'mongoose';
 
 @Module({
@@ -17,6 +18,7 @@ import * as mongoose from 'mongoose';
       `mongodb+srv://${process.env.MONGOOSE_USERID}:${process.env.MONGOOSE_PASSWORD}@cluster0.gqmop.mongodb.net/${process.env.MONGOOSE_DB_NAME}?retryWrites=true&w=majority`,
     ),
     CatsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
