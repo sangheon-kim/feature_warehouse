@@ -11,6 +11,8 @@ import {
   Patch,
   Post,
   Put,
+  Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
@@ -18,6 +20,8 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dto/cat.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { Request } from 'express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -26,9 +30,13 @@ export class CatsController {
     private readonly catsService: CatsService,
     private readonly authService: AuthService,
   ) {}
+
+  @ApiOperation({ summary: '현재 고양이 가져오기' })
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getAllCat() {
-    return 'get all cat api';
+  getCurrentCats(@Req() req: Request) {
+    // console.log(req.user);
+    return req.user;
   }
 
   @Get(':id')
@@ -55,6 +63,19 @@ export class CatsController {
     return await this.catsService.signUp(body);
   }
 
+  @ApiOperation({ summary: '로그인' })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 실패',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '로그인 성공',
+  })
   @Post('/login')
   async login(@Body() body: LoginRequestDto) {
     return this.authService.jwtLogIn(body);
