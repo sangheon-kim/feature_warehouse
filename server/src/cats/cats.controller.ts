@@ -1,4 +1,6 @@
+import { SuccessInterceptor } from './../common/interceptors/success.interceptor';
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -7,10 +9,12 @@ import {
   Patch,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
 
 @Controller('cats')
+@UseInterceptors(SuccessInterceptor)
 export class CatsController {
   @Get()
   getAllCat() {
@@ -24,7 +28,8 @@ export class CatsController {
   }
 
   @Post()
-  createCat() {
+  async signUp(@Body() body) {
+    console.log(body);
     return 'create cat api';
   }
 
