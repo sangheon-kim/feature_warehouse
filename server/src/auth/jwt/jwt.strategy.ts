@@ -14,6 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  // guard 동작하면서 해당 API시에 user 정보를 request에 담아서 해당 api로 내려준다.
   async validate(payload: Payload) {
     const cat = await this.catsRepository.findCatByIdWithoutPassword(
       payload.sub,

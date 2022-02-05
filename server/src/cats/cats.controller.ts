@@ -4,24 +4,18 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  ParseIntPipe,
-  Patch,
   Post,
-  Put,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dto/cat.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
-import { Request } from 'express';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { LoginResponseDto } from 'src/auth/dto/login.response.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -31,17 +25,24 @@ export class CatsController {
     private readonly authService: AuthService,
   ) {}
 
-  @ApiOperation({ summary: '현재 고양이 가져오기' })
+  @ApiOperation({ summary: '현재 고양이 가져오기 (내정보)' })
+  @ApiResponse({
+    status: 200,
+    description: '고양이 정보 가져오기 성공',
+    type: ReadOnlyCatDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '올바르지 않은 토큰',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCurrentCats(@Req() req: Request) {
-    // console.log(req.user);
-    return req.user;
-  }
-
-  @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe, PositiveIntPipe) id: number) {
-    return 'get one cat api';
+  getCurrentCat(@CurrentUser() cat) {
+    return cat.readOnlyData;
   }
 
   @ApiOperation({ summary: '회원가입' }) // Swagger 문서 title
@@ -75,10 +76,10 @@ export class CatsController {
   @ApiResponse({
     status: 200,
     description: '로그인 성공',
+    type: LoginResponseDto,
   })
   @Post('/login')
   async login(@Body() body: LoginRequestDto) {
     return this.authService.jwtLogIn(body);
-    // return 'login';
   }
 }
