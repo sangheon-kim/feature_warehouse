@@ -8,6 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -17,7 +18,7 @@ export class CatsController {
   }
 
   @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe) id: number) {
+  getOneCat(@Param('id', ParseIntPipe, PositiveIntPipe) id: number) {
     console.log(id);
     return 'get one cat api';
   }
