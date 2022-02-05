@@ -11,7 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         process.env.NODE_ENV === 'development' ? 'envs/.env.dev' : 'envs/.env',
     }),
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGOOSE_USERID}:${process.env.MONGOOSE_PASSWORD}@cluster0.gqmop.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.MONGOOSE_USERID}:${process.env.MONGOOSE_PASSWORD}@cluster0.gqmop.mongodb.net/${process.env.MONGOOSE_DB_NAME}?retryWrites=true&w=majority`,
     ),
   ],
   controllers: [AppController],
