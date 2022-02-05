@@ -33,6 +33,24 @@ export class Cat extends Document {
   @Prop()
   @IsString()
   imgUrl: string;
+
+  readonly readOnlyData: {
+    id: string;
+    email: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 export const CatSchema = SchemaFactory.createForClass(Cat);
+
+CatSchema.virtual('readOnlyData').get(function (this: Cat & ITimeStamp) {
+  return {
+    id: this.id,
+    email: this.email,
+    name: this.name,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+  };
+});
