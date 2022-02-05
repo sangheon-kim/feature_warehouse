@@ -8,6 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe()); // class-validation 적용 처리
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  }); // cors 허용
 
   const config = new DocumentBuilder()
     .setTitle(`Sangheon's API warehouse`)
