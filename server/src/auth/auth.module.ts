@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt/jwt.strategy';
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     // 로그인 할 때 사용
     JwtModule.register({
-      secret: 'secret',
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '1y' },
     }),
 
