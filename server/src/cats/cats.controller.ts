@@ -50,18 +50,8 @@ export class CatsController {
     return await this.catsService.signUp(body);
   }
 
-  @Put(':id')
-  updateCat() {
-    return 'update cat api';
-  }
-
-  @Patch(':id')
-  updatePartialCat() {
-    return 'update partial cat api';
-  }
-
-  @Delete(':id')
-  deleteCat() {
-    return 'delete service';
+  @Post('/login')
+  async login() {
+    return 'login';
   }
 }
