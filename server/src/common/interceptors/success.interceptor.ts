@@ -9,8 +9,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SuccessInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Before...');
+  intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
+    // console.log('Before...');
 
     return next.handle().pipe(
       map((data) => ({

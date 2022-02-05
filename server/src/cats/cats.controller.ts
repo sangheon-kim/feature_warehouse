@@ -1,4 +1,6 @@
-import { SuccessInterceptor } from './../common/interceptors/success.interceptor';
+import { CatsService } from 'src/cats/cats.service';
+import { CatRequestDto } from 'src/cats/dto/cats.request.dto';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import {
   Body,
   Controller,
@@ -16,6 +18,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int.pipe';
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 export class CatsController {
+  constructor(private readonly catsService: CatsService) {}
   @Get()
   getAllCat() {
     return 'get all cat api';
@@ -23,14 +26,12 @@ export class CatsController {
 
   @Get(':id')
   getOneCat(@Param('id', ParseIntPipe, PositiveIntPipe) id: number) {
-    console.log(id);
     return 'get one cat api';
   }
 
   @Post()
-  async signUp(@Body() body) {
-    console.log(body);
-    return 'create cat api';
+  async signUp(@Body() body: CatRequestDto) {
+    return this.catsService.signUp(body);
   }
 
   @Put(':id')
