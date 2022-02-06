@@ -5,14 +5,15 @@ import { PassportModule } from '@nestjs/passport';
 import { CatsModule } from 'src/cats/cats.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
+import * as path from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath:
         process.env.NODE_ENV === 'development'
-          ? '../../envs/.env.dev'
-          : '../../envs/.env',
+          ? path.join(__dirname, '../..', '.env.dev')
+          : path.join(__dirname, '../..', '.env'),
     }),
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     // 로그인 할 때 사용
