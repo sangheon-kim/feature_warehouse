@@ -19,6 +19,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { LoginResponseDto } from 'src/auth/dto/login.response.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { Cat } from './cats.schema';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -87,9 +88,17 @@ export class CatsController {
   }
 
   @ApiOperation({ summary: '고양이 이미지 업로드' })
+  @UseInterceptors(FilesInterceptor('image', 10, muilterOptions('cats')))
+  @UseGuards(JwtAuthGuard) // 인증 처리
   @Post('upload')
-  @UseInterceptors(FilesInterceptor('images', 10, muilterOptions('cats')))
-  async uploadCatImg(@UploadedFiles() files: Array<Express.Multer.File>) {
+  async uploadCatImg(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @CurrentUser() cat: Cat,
+  ) {
     console.log(files);
+
+    // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
+
+    return this.catsService.uploadImg(cat, files);
   }
 }

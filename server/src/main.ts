@@ -4,9 +4,11 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import * as expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe()); // class-validation 적용 처리
   app.useGlobalFilters(new HttpExceptionFilter());
 
@@ -23,6 +25,11 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   }); // cors 허용
+
+  // multer 파일에 접근할 수 있는 것이다. (http://localhost:8000/media/cats/aaa.png)
+  app.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
+    prefix: '/media', // uploads폴더를 /media로 접근가능하게 해주는 것.
+  });
 
   const config = new DocumentBuilder()
     .setTitle(`Sangheon's API warehouse`)

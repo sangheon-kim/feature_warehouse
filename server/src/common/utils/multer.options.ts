@@ -35,7 +35,7 @@ const storage = (folder: string): multer.StorageEngine => {
       const fileName = `${path.basename(
         file.originalname,
         ext,
-      )}${Date.now()}${ext}`;
+      )}_${Date.now()}${ext}`;
 
       cb(null, fileName);
     },
