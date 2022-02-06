@@ -1,4 +1,4 @@
-import { muilterOptions } from './../common/utils/multer.options';
+import { muilterOptions } from 'src/common/utils/multer.options';
 import { CatsService } from 'src/cats/cats.service';
 import { CatRequestDto } from 'src/cats/dto/cats.request.dto';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';

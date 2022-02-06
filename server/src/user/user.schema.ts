@@ -54,17 +54,17 @@ export class User extends Document {
   name: string;
 
   @ApiProperty({
-    example: 'kakao',
+    example: 'LO',
     description: '플랫폼명 - K - 카카오, N - 네이버, G - 구글, LO - 로컬',
     enum: ['K', 'N', 'G', 'LO'],
     required: true,
   })
   @Prop({
-    default: 'local',
+    default: 'LO',
   })
   @IsString()
   @IsNotEmpty()
-  platform: string;
+  platform: 'K' | 'N' | 'G' | 'LO';
 
   @ApiProperty({
     example: '123456',
@@ -115,11 +115,11 @@ export class User extends Document {
   bio: string;
 
   @ApiProperty({
-    example: '2',
+    example: '1',
     description: '개인정보 활용 동의 (1 - 동의, 2 - 동의 안함)',
   })
   @Prop({
-    default: '2',
+    default: '1',
   })
   @IsEnum(['1', '2'])
   isTermPrivacy: '1' | '2';
@@ -141,6 +141,56 @@ export class User extends Document {
     default: '2',
   })
   isThirdPartyPrivacy: '1' | '2';
+
+  @ApiProperty({
+    example:
+      'https://www.kindpng.com/picc/m/21-214439_free-high-quality-person-icon-default-profile-picture.png',
+    description: '프로필 썸네일',
+    default:
+      'https://www.kindpng.com/picc/m/21-214439_free-high-quality-person-icon-default-profile-picture.png',
+  })
+  @Prop({
+    default:
+      'https://www.kindpng.com/picc/m/21-214439_free-high-quality-person-icon-default-profile-picture.png',
+  })
+  @IsString()
+  thumbnail: string;
+
+  readonly readOnlyData: {
+    email: string;
+    telNumber: string;
+    platform: string;
+    name: string;
+    nickname: string;
+    gender: '1' | '2' | '3';
+    birth: string;
+    bio: string;
+    isTermPrivacy: '1' | '2';
+    isMarketingPrivacy: '1' | '2';
+    isThirdPartyPrivacy: '1' | '2';
+    thumbnail: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('readOnlyData').get(function (this: User & ITimeStamp) {
+  return {
+    email: this.email,
+    telNumber: this.telNumber,
+    platform: this.platform,
+    name: this.name,
+    nickname: this.nickname,
+    gender: this.gender,
+    birth: this.birth,
+    bio: this.bio,
+    isTermPrivacy: this.isTermPrivacy,
+    isMarketingPrivacy: this.isMarketingPrivacy,
+    isThirdPartyPrivacy: this.isThirdPartyPrivacy,
+    thumbnail: this.thumbnail,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+  };
+});
