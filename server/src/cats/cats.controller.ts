@@ -11,7 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dto/cat.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
@@ -21,6 +21,7 @@ import { LoginResponseDto } from 'src/auth/dto/login.response.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Cat } from './cats.schema';
 
+@ApiTags('고양이 API')
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 export class CatsController {
