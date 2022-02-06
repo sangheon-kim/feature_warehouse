@@ -1,3 +1,4 @@
+import { muilterOptions } from './../common/utils/multer.options';
 import { CatsService } from 'src/cats/cats.service';
 import { CatRequestDto } from 'src/cats/dto/cats.request.dto';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
@@ -6,6 +7,7 @@ import {
   Controller,
   Get,
   Post,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,6 +18,7 @@ import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { LoginResponseDto } from 'src/auth/dto/login.response.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -81,5 +84,12 @@ export class CatsController {
   @Post('/login')
   async login(@Body() body: LoginRequestDto) {
     return this.authService.jwtLogIn(body);
+  }
+
+  @ApiOperation({ summary: '고양이 이미지 업로드' })
+  @Post('upload')
+  @UseInterceptors(FilesInterceptor('images', 10, muilterOptions('cats')))
+  async uploadCatImg(@UploadedFiles() files: Array<Express.Multer.File>) {
+    console.log(files);
   }
 }
