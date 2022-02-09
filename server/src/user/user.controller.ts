@@ -29,4 +29,9 @@ export class UserController {
   async signUp(@Body() body: UserRequestDto) {
     return this.userService.signUp(body);
   }
+
+  @Post('/sms')
+  async sms() {
+    return this.userService.sendSMSAuthenticated();
+  }
 }
