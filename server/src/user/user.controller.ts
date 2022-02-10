@@ -2,7 +2,10 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
-import { UserRequestDto } from 'src/user/dto/user.request.dto';
+import {
+  UserRequestDto,
+  SendSMSAuthenticatedDto,
+} from 'src/user/dto/user.request.dto';
 import { ReadOnlyUserDto } from './dto/user.dto';
 
 @ApiTags('유저 API')
@@ -31,7 +34,10 @@ export class UserController {
   }
 
   @Post('/sms')
-  async sms() {
-    return this.userService.sendSMSAuthenticated();
+  async sendSMSAuthenticate(@Body() body: SendSMSAuthenticatedDto) {
+    console.log({
+      tel: body.telNumber,
+    });
+    return this.userService.sendSMSAuthenticated(body.telNumber);
   }
 }
