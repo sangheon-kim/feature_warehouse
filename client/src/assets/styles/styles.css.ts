@@ -3,9 +3,7 @@ import { globalStyle } from "@vanilla-extract/css";
 import { colors } from "src/assets/styles/colors.css";
 import { typography } from "./typography.css";
 
-const root = createGlobalTheme("--root", {
-  ...typography,
-});
+const root = createGlobalTheme("--root", {});
 
 globalStyle("html, body, #__next", {
   width: "100%",
@@ -18,4 +16,8 @@ globalStyle("*", {
   padding: 0,
 });
 
-export const theme = { ...root, colors };
+export const theme = {
+  ...root,
+  colors,
+  ...typography,
+};
