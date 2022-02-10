@@ -3,15 +3,39 @@ import { UserRequestDto } from './dto/user.request.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { HttpService } from '@nestjs/axios';
-import CryptoJS, { createHmac, createHash } from 'crypto';
+import { createHmac } from 'crypto';
 import axios from 'axios';
+
+interface SMSHash {
+  hash_key: string;
+  authenticatedNumber: string;
+}
 
 @Injectable()
 export class UserService {
+  smsResult: { [key: string]: SMSHash };
   constructor(
     private readonly userRepository: UserRepository,
     private readonly httpService: HttpService,
-  ) {}
+  ) {
+    this.smsResult = {};
+  }
+
+  randNumber(length: number) {
+    let numberStr = '';
+    for (let i = 0; i < length; i++) {
+      numberStr += Math.floor(Math.random() * 10);
+    }
+
+    return numberStr;
+  }
+
+  randHash() {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  }
 
   async makeSignature() {
     const method = 'POST';
@@ -40,24 +64,27 @@ export class UserService {
     return bcrypt.hash(password, 10);
   }
 
-  async sendSMSAuthenticated() {
+  async sendSMSAuthenticated(phoneNumber: string) {
+    const randNumber = this.randNumber(6);
+    const hash_key = this.randHash();
+
     const signature = await this.makeSignature();
     const headers = {
       'x-ncp-apigw-timestamp': new Date().getTime(),
       'x-ncp-iam-access-key': process.env.NAVER_CLOUD_PLATFORM_ACCESS_KEY,
       'x-ncp-apigw-signature-v2': signature,
     };
+
     const body = {
-      content: `문자 보내기 API 연동 성공 By Sangheon Kim`,
-      subject: '',
+      content: `[상헌 API] 인증번호 [${this.randNumber(6)}]를 입력해주세요.`,
       from: '01022848367',
       countryCode: '82',
       messages: [
         {
-          to: '01022848367',
+          to: phoneNumber,
         },
       ],
-      type: 'sms',
+      type: 'SMS',
       contentType: 'COMM',
     };
 
@@ -69,6 +96,16 @@ export class UserService {
           headers,
         },
       );
+
+      this.smsResult[phoneNumber] = {
+        hash_key,
+        authenticatedNumber: randNumber,
+      };
+
+      console.log(this.smsResult);
+      return {
+        hash_key,
+      };
     } catch (err) {
       console.log(err);
     }
