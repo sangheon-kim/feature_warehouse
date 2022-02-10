@@ -6,5 +6,5 @@ export const Wrapper = style({
   height: "100%",
   backgroundColor: theme.colors.bg100,
   color: theme.colors.txtColor,
-  ...theme.typography.ko.body.body1,
+  ...theme.typography.ko.headline.headline1,
 });
