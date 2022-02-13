@@ -1,5 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { UserRequestDto } from './dto/user.request.dto';
+import {
+  CheckSMSAuthenticatedDto,
+  UserRequestDto,
+} from './dto/user.request.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { HttpService } from '@nestjs/axios';
@@ -76,7 +79,7 @@ export class UserService {
     };
 
     const body = {
-      content: `[상헌 API] 인증번호 [${this.randNumber(6)}]를 입력해주세요.`,
+      content: `[상헌 API] 인증번호 [${randNumber}]를 입력해주세요.`,
       from: '01022848367',
       countryCode: '82',
       messages: [
@@ -102,12 +105,44 @@ export class UserService {
         authenticatedNumber: randNumber,
       };
 
-      console.log(this.smsResult);
       return {
         hash_key,
       };
     } catch (err) {
-      console.log(err);
+      throw new HttpException(err, 500);
+    }
+  }
+
+  async checkSMSAuthenticate(body: CheckSMSAuthenticatedDto) {
+    const {
+      hash_key: reqHashKey,
+      authenticatedNumber: reqAuthenticatedNumber,
+      phoneNumber,
+    } = body;
+
+    const { hash_key, authenticatedNumber } = this.smsResult[phoneNumber] || {};
+
+    console.log({
+      body,
+      sms: this.smsResult[phoneNumber],
+    });
+
+    const isCorrectHashKey = reqHashKey === hash_key;
+    if (!isCorrectHashKey) {
+      throw new HttpException('해쉬값이 올바르지 않습니다.', 400);
+    }
+    const isCorrectAuthenticatedNumber =
+      reqAuthenticatedNumber === authenticatedNumber;
+    if (!isCorrectAuthenticatedNumber) {
+      throw new HttpException('인증번호가 올바르지 않습니다.', 400);
+    }
+
+    if (isCorrectHashKey && isCorrectAuthenticatedNumber) {
+      this.smsResult[phoneNumber] = null;
+      delete this.smsResult[phoneNumber];
+      return {
+        isValidate: isCorrectHashKey && isCorrectAuthenticatedNumber,
+      };
     }
   }
 

@@ -1,12 +1,13 @@
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, Put, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import {
   UserRequestDto,
   SendSMSAuthenticatedDto,
+  CheckSMSAuthenticatedDto,
 } from 'src/user/dto/user.request.dto';
-import { ReadOnlyUserDto } from './dto/user.dto';
+import { ReadOnlyUserDto, SendSMSAuthenticateResponse } from './dto/user.dto';
 
 @ApiTags('유저 API')
 @Controller('user')
@@ -33,11 +34,41 @@ export class UserController {
     return this.userService.signUp(body);
   }
 
+  @ApiOperation({ summary: '인증번호 전송' })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @ApiResponse({
+    status: 400,
+    description: '핸드폰 번호 타입이 올바르지 않습니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '인증문자 전송 성공',
+    type: SendSMSAuthenticateResponse,
+  })
   @Post('/sms')
   async sendSMSAuthenticate(@Body() body: SendSMSAuthenticatedDto) {
-    console.log({
-      tel: body.telNumber,
-    });
-    return this.userService.sendSMSAuthenticated(body.telNumber);
+    return this.userService.sendSMSAuthenticated(body.phoneNumber);
+  }
+
+  @ApiOperation({ summary: '인증번호 확인' })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '휴대폰 인증 성공',
+    type: SendSMSAuthenticateResponse,
+  })
+  @Put('/sms')
+  async checkSMSAuthenticate(@Body() body: CheckSMSAuthenticatedDto) {
+    return this.userService.checkSMSAuthenticate(body);
   }
 }
