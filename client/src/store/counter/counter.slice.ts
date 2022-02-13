@@ -1,25 +1,25 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import ajaxUtil from "src/utils/ajaxUtil";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import ajaxUtil from "src/common/utils/ajaxUtil"
 
 const initialState: CountState = {
   count: ajaxUtil.init(),
-};
+}
 
-const name = "Count";
+const name = "Count"
 
 const countSlice = createSlice({
   name,
   initialState,
   reducers: {
     increase(state) {
-      state.count = state.count += 1;
+      state.count = state.count += 1
     },
     decrease(state) {
-      state.count = state.count -= 1;
+      state.count = state.count -= 1
     },
   },
-});
+})
 
-export const countReducer = countSlice.reducer;
-export const countAction = countSlice.actions;
-export const COUNT = countSlice.name;
+export const countReducer = countSlice.reducer
+export const countAction = countSlice.actions
+export const COUNT = countSlice.name

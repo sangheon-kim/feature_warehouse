@@ -22,7 +22,8 @@ export const Wrapper = style({
   alignItems: "center",
   minHeight: "100vh",
   fontFamily: `Poppins`,
-  background: "#aaa",
+  background: "#cccccc",
+  // background: "linear-gradient(to bottom, #f1f4f9, #dff1ff)",
 })
 
 export const Color = style({
@@ -55,8 +56,6 @@ export const Color = style({
 
 export const Box = style({
   position: "relative",
-  width: "calc(100% - 32px)",
-  maxWidth: 750,
 })
 
 export const Square = style({
@@ -108,7 +107,7 @@ export const Square = style({
 
 export const Container = style({
   position: "relative",
-  width: "calc(100% - 32px)",
+  width: 400,
   minHeight: 400,
   background: "rgba(255,255,255,0.1)",
   borderRadius: 10,
@@ -120,33 +119,36 @@ export const Container = style({
   border: "1px solid rgba(255,255,255,0.5)",
   borderRight: "1px solid rgba(255,255,255,0.2)",
   borderBottom: "1px solid rgba(255,255,255,0.2)",
-  margin: "0 auto",
 })
 
 export const Form = style({
   position: "relative",
   width: "100%",
   height: "100%",
-  padding: "0 16px",
-  display: "flex",
-  flexDirection: "column",
+  padding: 40,
 })
 
 export const Title = style({
   position: "relative",
-  display: "inline-block",
   color: "#ffffff",
-  textAlign: "center",
   fontSize: 24,
   fontWeight: 700,
   letterSpacing: 1,
-  paddingBottom: 4,
-  borderBottom: "2px solid #fff",
+  marginBottom: 40,
+  selectors: {
+    "&:before": {
+      content: "",
+      position: "absolute",
+      left: 0,
+      bottom: -10,
+      width: 72,
+      height: 4,
+      background: "#ffffff",
+    },
+  },
 })
 
 export const InputBox = style({
-  display: "flex",
-  alignItems: "center",
   width: "100%",
   marginTop: 20,
 })
@@ -154,9 +156,9 @@ export const InputBox = style({
 export const Input = style({
   width: "100%",
   background: "rgba(255,255,255,0.2)",
-  padding: "8px 12px",
+  padding: "10px 20px",
   borderRadius: 35,
-  fontSize: 12,
+  fontSize: 16,
   letterSpacing: 1,
   color: "#ffffff",
   border: "1px solid rgba(255,255,255,0.5)",
@@ -167,41 +169,15 @@ export const Input = style({
     "&::placeholder": {
       color: "#ffffff",
     },
+    '&[type="submit"]': {
+      background: "#ffffff",
+      color: "#666666",
+      maxWidth: 100,
+      cursor: "pointer",
+      marginBottom: 20,
+      fontWeight: 700,
+    },
   },
-})
-
-export const Button = style({
-  background: "#ffffff",
-  border: "1px solid rgba(255,255,255,0.5)",
-  borderRight: "1px solid rgba(255,255,255,0.2)",
-  borderBottom: "1px solid rgba(255,255,255,0.2)",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
-  color: "#666666",
-  maxWidth: 100,
-  cursor: "pointer",
-  fontWeight: 700,
-  borderRadius: 35,
-  fontSize: 14,
-  marginLeft: 8,
-  minWidth: 115,
-  height: 32,
-})
-
-export const SubmitButton = style({
-  background: "#ffffff",
-  border: "1px solid rgba(255,255,255,0.5)",
-  borderRight: "1px solid rgba(255,255,255,0.2)",
-  borderBottom: "1px solid rgba(255,255,255,0.2)",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
-  color: "#666666",
-  maxWidth: 100,
-  cursor: "pointer",
-  fontWeight: 700,
-  borderRadius: 35,
-  fontSize: 14,
-  minWidth: "100%",
-  height: 32,
-  marginTop: 32,
 })
 
 export const Forget = style({
