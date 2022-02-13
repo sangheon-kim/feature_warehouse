@@ -7,7 +7,11 @@ import {
   SendSMSAuthenticatedDto,
   CheckSMSAuthenticatedDto,
 } from 'src/user/dto/user.request.dto';
-import { ReadOnlyUserDto, SendSMSAuthenticateResponse } from './dto/user.dto';
+import {
+  ReadOnlyUserDto,
+  SendSMSAuthenticateResponse,
+  CheckSMSAuthenticateResponse,
+} from './dto/user.dto';
 
 @ApiTags('유저 API')
 @Controller('user')
@@ -65,7 +69,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: '휴대폰 인증 성공',
-    type: SendSMSAuthenticateResponse,
+    type: CheckSMSAuthenticateResponse,
   })
   @Put('/sms')
   async checkSMSAuthenticate(@Body() body: CheckSMSAuthenticatedDto) {
