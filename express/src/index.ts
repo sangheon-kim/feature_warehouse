@@ -1,8 +1,10 @@
 import express, { Request, Response, NextFunction } from "express"
+import path from "path"
+import "src/config"
 import cookieParser from "cookie-parser"
 
 const app = express()
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 app.use(express.json()) // body값 파싱 미들웨어
 app.use(cookieParser())
