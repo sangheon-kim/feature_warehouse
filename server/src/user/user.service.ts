@@ -167,4 +167,45 @@ export class UserService {
 
     return user.readOnlyData;
   }
+
+  async getLogin(accessToken: string) {
+    const _host = 'https://kapi.kakao.com/v2/user/me';
+
+    const _headers = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+    };
+
+    const result = await axios.post(_host, {}, _headers);
+
+    return result;
+  }
+
+  async kakaoLogin(code: string) {
+    const REDIRECT_URL = `http://localhost:8000/user/kakao/oauth`;
+    // const _hostName = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${_restApiKey}&redirect_uri=${_redirect_uri}&code=${qs.code}`
+    const _hostName = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URL}&code=${code}`;
+    const _headers = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+    };
+
+    try {
+      const {
+        data: { access_token },
+      } = await axios.post(_hostName, {}, _headers);
+
+      await this.getLogin(access_token);
+
+      return `<html>
+        <body>카카오 로그인 성공</body>
+      </html>`;
+    } catch (err) {
+      console.error(err);
+      return new HttpException(err, 500);
+    }
+  }
 }
