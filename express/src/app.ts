@@ -2,14 +2,17 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import { Controller } from 'src/types/env'
+import DB from 'src/db'
 
 class App {
   public app: express.Application
+  db: DB = new DB()
   constructor(controllers: Controller[], private port: number) {
     this.app = express()
 
     this.initMiddlewares()
     this.initControllers(controllers)
+    this.db.init()
   }
 
   initMiddlewares() {
@@ -20,7 +23,6 @@ class App {
 
   initControllers(contorllers: Controller[]) {
     contorllers.forEach((controller: Controller) => {
-      console.log(controller)
       this.app.use('/', controller.router)
     })
   }
