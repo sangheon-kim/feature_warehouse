@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: API Warehouse
+  description: '`Sangheon Kim`''s Warehouse'
+  contact:
+    email: ksj8367@gmail.com
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8000/v1'
+  - url: 'https://localhost:8000/v1'
+tags:
+  - name: app
+    description: 글로벌 라우트
+  - name: auth
+    description: 인증관련 라우트
+  - name: user
+    description: 유저 관련 라우트
+paths:
+  /user:
+    get:
+      summary: Returns user list
+      responses:
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  parameters: null
+  schemas:
+    User:
+      type: object
+      required:
+        - _id
+        - name
+      properties:
+        _id:
+          type: number
+          description: id
+        name:
+          type: string
+          description: 유저 이름
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+  responses:
+    BadRequest:
+      description: 잘못된 요청
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 잘못된 요청
+    InternalServerError:
+      description: 서버 에러
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 서버 내부 오류
