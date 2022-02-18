@@ -1,13 +1,14 @@
 import express from 'express'
+import { Controller } from 'src/types/env'
 
-class AuthController {
+class AuthController implements Controller {
   public path = '/auth'
   public router = express.Router()
   constructor() {
-    this.initializeRoutes()
+    this.init()
   }
 
-  initializeRoutes() {
+  init() {
     this.router.get(this.path, this.handleAuth)
   }
 
@@ -16,4 +17,4 @@ class AuthController {
   }
 }
 
-export default new AuthController()
+export default AuthController
