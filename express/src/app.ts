@@ -7,8 +7,11 @@ import DB from 'src/db'
 class App {
   public app: express.Application
   db: DB = new DB()
+  api_version: string
   constructor(controllers: Controller[], private port: number) {
     this.app = express()
+
+    this.api_version = process.env.API_VERSION
 
     this.initMiddlewares()
     this.initControllers(controllers)
@@ -23,7 +26,7 @@ class App {
 
   initControllers(contorllers: Controller[]) {
     contorllers.forEach((controller: Controller) => {
-      this.app.use('/', controller.router)
+      this.app.use(`/v${this.api_version}`, controller.router)
     })
   }
 

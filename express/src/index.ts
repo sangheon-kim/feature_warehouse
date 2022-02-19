@@ -15,7 +15,7 @@ dotenv.config({
 import AppController from 'src/api/controllers/app.controller'
 import AuthController from 'src/api/controllers/auth.controller'
 import UserController from 'src/api/controllers/user.controller'
-import PostsController from './api/controllers/post.controller'
+import PostsController from './api/controllers/posts.controller'
 
 const PORT = Number(process.env.PORT) || 8000
 
