@@ -1,0 +1,20 @@
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6210e941d7f1f80132da8de0
+        author:
+          type: string
+          example: sangheon-kim (ksj8367@gmail.com)
+        content:
+          type: string
+          example: test Content
+        title:
+          type: string
+          example: Test Title
+        __v:
+          type: integer
+          example: 0

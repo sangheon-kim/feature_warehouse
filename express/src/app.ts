@@ -1,38 +1,45 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
-import appRouter from './api/routes/app.router'
-import userRouter from './api/routes/user.router'
-// import authRouter from './api/routes/auth.roouter'
-import { clientErrorHandler } from './api/common/middlewares/errorHandler'
+import { Controller } from 'src/types/env'
+import DB from 'src/db'
 
 class App {
   public app: express.Application
-  constructor() {
+  db: DB = new DB()
+  api_version: string
+  constructor(controllers: Controller[], private port: number) {
     this.app = express()
+
+    this.api_version = process.env.API_VERSION
+
+    this.initMiddlewares()
+    this.initControllers(controllers)
+    this.db.init()
+  }
+
+  initMiddlewares() {
+    this.app.use(express.json()) // body값 파싱 미들웨어
+    this.app.use(cookieParser())
+    this.app.use(morgan('dev'))
+  }
+
+  initControllers(contorllers: Controller[]) {
+    contorllers.forEach((controller: Controller) => {
+      this.app.use(`/v${this.api_version}`, controller.router)
+    })
+  }
+
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`App listening on the port ${this.port}`)
+    })
   }
 }
 
-const { app } = new App()
-
-app.use(express.json()) // body값 파싱 미들웨어
-app.use(cookieParser())
-app.use(morgan('dev'))
-
-app.use('/', appRouter)
-app.use('/user', userRouter)
-// app.use('/auth', authRouter)
-
 /** 404 처리 */
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  res.status(404).send(clientErrorHandler('페이지를 찾을 수 없습니다.'))
-})
-
-// app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-//   res.locals.message = err.message
-//   res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-//   res.status(err.)
+// app.use(function (req: Request, res: Response, next: NextFunction) {
+//   res.status(404).send(clientErrorHandler('페이지를 찾을 수 없습니다.'))
 // })
 
-export default app
+export default App
